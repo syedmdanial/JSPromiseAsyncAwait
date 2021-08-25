@@ -127,66 +127,49 @@ function testPromiseAll() {
 
 /* Promise.all() to append script into <head /> starts*/
 function appendElementToHead() {
-  let flag = true;
+  const flag = false;
+  const d = document.getElementsByTagName('head')[0];
 
   const p1 = new Promise((resolve, reject) => {
     if (flag) {
-      const d = document.getElementsByTagName('head')[0];
-
       let _script = document.createElement('script');
 
       _script.id = 'test-script';
       _script.type = 'text/javascript';
 
-      const res = d.appendChild(_script);
-      resolve(res);
+      d.appendChild(_script);
+      resolve(true);
     } else {
-      let _script = document.getElementById('test-script');
+      let _script = document.createElement('script');
 
-      if (_script) _script.remove();
+      _script.id = 'test-script-2';
+      _script.type = 'text/javascript';
 
-      reject(_script);
+      d.appendChild(_script);
+      reject(false);
     }
   });
 
   const p2 = new Promise((resolve, reject) => {
     if (flag) {
-      const d = document.getElementsByTagName('head')[0];
-
-      const _nonscript = document.createElement('nonscript');
+      let _nonscript = document.createElement('nonscript');
 
       _nonscript.id = 'test-nonscript';
 
-      // const res = d.appendChild(_nonscript);
-      resolve(_nonscript);
+      d.appendChild(_nonscript);
+      resolve(true);
     } else {
-      let _nonscript = document.getElementById('test-nonscript');
+      let _nonscript = document.createElement('nonscript');
 
-      // if (_nonscript) _nonscript.remove();
-      reject(_nonscript);
+      _nonscript.id = 'test-nonscript-2';
+
+      d.appendChild(_nonscript);
+      reject(false);
     }
   });
 
   return Promise.all([p1, p2]);
 }
 
-appendElementToHead()
-  .then((res) => {
-    let x = 1;
-    let y = res.length;
-
-    for (x; x <= y; x++) {
-      document.getElementsByTagName('head')[0].appendChild(res[x]);
-    }
-  })
-  .catch((err) => {
-    if (err) {
-      let x = 1;
-      let y = err.length;
-
-      for (x; x <= y; x++) {
-        err[x].remove();
-      }
-    }
-  });
+appendElementToHead();
 /* Promise.all() to append script into <head /> ends*/
